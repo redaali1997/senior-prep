@@ -1,0 +1,51 @@
+name: CI
+
+# WHEN the robot runs: on every push, and on every pull request.
+on:
+  push:
+  pull_request:
+
+jobs:
+  tests:
+    name: Lint & Test
+    runs-on: ubuntu-latest          # a fresh, throwaway Linux machine, created per run
+
+    steps:
+      # 1. Get our code onto the machine.
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Install PHP 8.4 (matches our project).
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer:v2
+          coverage: none            # no Xdebug -> faster, no debug noise
+
+      # 3. Cache composer's vendor/ folder, keyed on composer.lock.
+      #    Same lockfile = reuse the cache = skip a slow reinstall.
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-
+
+      # 4. Install PHP dependencies.
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      # 5. Laravel needs an app key + .env to boot.
+      - name: Prepare environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      # 6. CHEAP check first: code style. Fails fast if formatting is off.
+      - name: Check code style (Pint)
+        run: vendor/bin/pint --test
+
+      # 7. EXPENSIVE check last: the test suite (uses in-memory sqlite).
+      - name: Run tests (Pest)
+        run: php artisan test
