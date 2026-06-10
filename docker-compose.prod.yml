@@ -1,0 +1,10 @@
+services:
+  app:
+    environment:
+        - APP_DEBUG=false
+        - APP_KEY=base64:aY+hZmzOq46esH/uEIonnWVyClLQwLO6NXyfTKaWAuA=
+
+  nginx:
+    ports:
+      - "8000:80"
+      # - "443:443"
