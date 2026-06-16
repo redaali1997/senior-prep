@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Say Hello
-        run: echo "أول pipeline شغّال على الريبو 🎉"
+      - name: Check out the code
+        uses: actions/checkout@v4
 
       - name: Show the runner environment
         run: |
