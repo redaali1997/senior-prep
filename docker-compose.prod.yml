@@ -1,10 +1,11 @@
 services:
   app:
+    image: ghcr.io/redaali1997/senior-prep
     environment:
         - APP_DEBUG=false
         - APP_KEY=base64:aY+hZmzOq46esH/uEIonnWVyClLQwLO6NXyfTKaWAuA=
 
   nginx:
     ports:
-      - "8000:80"
+      - "80:80"
       # - "443:443"

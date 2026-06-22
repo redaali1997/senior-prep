@@ -85,7 +85,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and push
+      - name: Build and push app image
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -95,3 +95,14 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}:${{ github.sha }}
             ghcr.io/${{ github.repository }}:latest
+
+      - name: Build and push nginx image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          target: nginx
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}:latest
+
