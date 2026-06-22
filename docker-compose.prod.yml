@@ -3,7 +3,7 @@ services:
     image: ghcr.io/redaali1997/senior-prep
     environment:
         - APP_DEBUG=false
-        - APP_KEY=base64:aY+hZmzOq46esH/uEIonnWVyClLQwLO6NXyfTKaWAuA=
+        - APP_KEY=${APP_KEY}
 
   nginx:
     ports:
