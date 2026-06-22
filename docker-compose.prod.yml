@@ -4,8 +4,14 @@ services:
     environment:
         - APP_DEBUG=false
         - APP_KEY=${APP_KEY}
+  
+  queue:
+    image: ghcr.io/redaali1997/senior-prep
+
+  schedule:
+    image: ghcr.io/redaali1997/senior-prep
 
   nginx:
+    image: ghcr.io/redaali1997/senior-prep-nginx
     ports:
       - "80:80"
-      # - "443:443"

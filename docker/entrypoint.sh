@@ -12,7 +12,7 @@ else
     php artisan optimize
 fi
 
-php artisan migrate --force
+# php artisan migrate --force
 
 echo "✅ Ready. Starting..."
 
