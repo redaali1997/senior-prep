@@ -89,6 +89,12 @@ services:
       target: nginx
     depends_on:
       - app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/up"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 30s
     restart: unless-stopped
 
 volumes:

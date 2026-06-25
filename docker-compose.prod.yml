@@ -1,15 +1,15 @@
 services:
   app:
-    image: ghcr.io/redaali1997/senior-prep
+    image: ghcr.io/redaali1997/senior-prep:${APP_VERSION:-latest}
     environment:
         - APP_DEBUG=false
         - APP_KEY=${APP_KEY}
   
   queue:
-    image: ghcr.io/redaali1997/senior-prep
+    image: ghcr.io/redaali1997/senior-prep:${APP_VERSION:-latest}
 
   schedule:
-    image: ghcr.io/redaali1997/senior-prep
+    image: ghcr.io/redaali1997/senior-prep:${APP_VERSION:-latest}
 
   nginx:
     image: ghcr.io/redaali1997/senior-prep-nginx
