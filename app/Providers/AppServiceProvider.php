@@ -19,8 +19,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (app()->isProduction()) {
-            throw new \RuntimeException('Simulated runtime failure for rollback test');
-        }
+        //
     }
 }
