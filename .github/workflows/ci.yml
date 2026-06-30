@@ -127,8 +127,8 @@ jobs:
             docker compose -f docker-compose.yml -f docker-compose.prod.yml pull
             if docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --no-deps --wait app; then
               echo "✅ Deploy نجح"
-              echo ${{ github.sha }} > current_version.txt
-              docker compose exec -T app php artisan migrate --force
+              echo "${{ github.sha }}" > current_version.txt
+              docker compose -f docker-compose.yml -f docker-compose.prod.yml exec -T app php artisan migrate --force
               docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --no-deps queue schedule
               docker image prune -f
             else
