@@ -121,10 +121,20 @@ jobs:
           envs: APP_VERSION
           script: |
             cd ~/myapp
+            PREVIOUS_VERSION=$(cat current_version.txt 2>/dev/null || echo "latest")
             export APP_VERSION=${{ github.sha }}
             echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker compose -f docker-compose.yml -f docker-compose.prod.yml pull
-            docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --no-deps app
-            docker compose exec -T app php artisan migrate --force
-            docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --no-deps queue schedule
-            docker image prune -f
+            if docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --no-deps --wait app; then
+              echo "✅ Deploy نجح"
+              echo ${{ github.sha }} > current_version.txt
+              docker compose exec -T app php artisan migrate --force
+              docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --no-deps queue schedule
+              docker image prune -f
+            else
+              echo "❌ Deploy فشل! بنرجع للنسخة السابقة..."
+              export APP_VERSION=$PREVIOUS_VERSION
+              docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --no-deps --wait app
+              echo "↩️ رجعنا للنسخة $PREVIOUS_VERSION"
+              exit 1
+            fi
